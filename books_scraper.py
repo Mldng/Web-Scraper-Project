@@ -27,7 +27,7 @@ def get_data(url,category="Home") -> list:
     driver.quit()
     return data
 
-def main(url):
+def main(url="https://books.toscrape.com/"):
     data = get_data(url)
     print(data)
 
