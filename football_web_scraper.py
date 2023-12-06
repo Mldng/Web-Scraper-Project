@@ -3,6 +3,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import Select
 import pandas as pd
 import time
+import os
 
 def get_data_ENG(url) -> pd:
     driver = webdriver.Chrome()
@@ -39,6 +40,8 @@ def get_data_ENG(url) -> pd:
     return df
 
 def get_data_dropdown(url,index) -> pd:
+    print(f'Getting data for country {index}')
+
     driver = webdriver.Chrome()
     driver.get(url)
 
@@ -79,3 +82,12 @@ def get_data_dropdown(url,index) -> pd:
         'away_teams' : away_teams
     })
     return df
+
+def save_csv(df, index):
+    print(f'Saving data for country {index}')
+    save_path = os.path.join(os.getcwd(),'csv')
+    if not os.path.exists(save_path):
+        os.makedirs(save_path)
+    save_name = f'football_data_{index}.csv'
+    df.to_csv(save_name, index=False)
+    print(f'finished saving data for country {index}')
