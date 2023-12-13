@@ -114,9 +114,14 @@ def get_data_dropdown(url,index) -> pd:
     # Wait for dynamic content to load
     time.sleep(5)
 
-    # Select a country from the dropdown menu
-    dropdown = Select(driver.find_element(By.ID,'country'))
-    dropdown.select_by_index(index)
+    try:
+        # Select a country from the dropdown menu
+        dropdown = Select(driver.find_element(By.ID,'country'))
+        dropdown.select_by_index(index)
+    except NoSuchElementException:
+        print("There is no element with that index")
+        driver.quit()
+        return pd.DataFrame()  # Return an empty DataFrame
 
     # Wait again for dynamic content to load after selection
     time.sleep(5)
