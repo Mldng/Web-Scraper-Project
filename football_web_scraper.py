@@ -190,7 +190,7 @@ def main():
         # Increment the index for the next iteration
         country_index += 1
 
-    print("Data scraping and saving completed successfully.")
+    print("Data scraping and saving completed successfully")
 
 if __name__ == "__main__":
     main()
