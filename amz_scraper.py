@@ -1,4 +1,5 @@
 import csv
+import time
 from selenium.webdriver import Chrome, ChromeOptions
 from selenium.webdriver.common.by import By
 
@@ -35,12 +36,11 @@ class Bot:
                     page += 1
 
                 #Get title
-                XPath_title = (f'//*[@id="search"]/div[1]/div[1]/div/span[1]
-                               /div[1]/div[{count}]/div/div/div/div/span/div/
-                               div/div[2]/div[1]/h2/a/span')
+                XPath_title = (f'//*[@id="search"]/div[1]/div[1]/div/span[1]/div[1]/div[{count}]/div/div/div/div/span/div/div/div[2]/div[1]/h2/a/span')
                 title = browser.find_element(By.XPATH,XPath_title)
                 title_text = title.get_attribute("innerHTML").splitlines()[0]
                 title.click()
+                time.sleep(10)
 
                 XPath_price = '//*[@id="corePrice_feature_div"]'
                 price = browser.find_element(By.XPATH,XPath_price)
@@ -73,3 +73,12 @@ class Bot:
         return info_list
 
 fetcher = Bot()
+
+with open('result.csv', 'w', newline='', encoding='utf-8') as csvfile:
+    article_writer = (csv.writer(csvfile,
+                                 delimiter=';',
+                                 quotechar='"',
+                                 quoting=csv.QUOTE_MINIMAL)
+    )
+    for article in fetcher.article('dyson'):
+        article_writer.writerow([article.title, article.price])
