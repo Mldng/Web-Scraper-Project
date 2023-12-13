@@ -167,3 +167,30 @@ def save_csv(df, index):
     save_name = f'football_data_{index}.csv'
     df.to_csv(save_name, index=False)
     print(f'finished saving data for country {index}')
+
+def main():
+    # Define the URL
+    url = "https://www.adamchoi.co.uk/overs/detailed"
+    country_index = 0  # Start from index 0
+
+    while True:
+        # Get data
+        print(f"Scraping data for country index {country_index}...")
+        df = get_data_dropdown(url, country_index)
+
+        # Check if the DataFrame is empty (indicating no such index)
+        if df.empty:
+            print(f"No element with index {country_index}, stopping.")
+            break
+
+        # Save data to CSV
+        print(f"Saving data for country index {country_index}...")
+        save_csv(df, country_index)
+
+        # Increment the index for the next iteration
+        country_index += 1
+
+    print("Data scraping and saving completed successfully.")
+
+if __name__ == "__main__":
+    main()
