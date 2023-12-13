@@ -164,7 +164,7 @@ def save_csv(df, index):
     save_path = os.path.join(os.getcwd(),'csv')
     if not os.path.exists(save_path):
         os.makedirs(save_path)
-    save_name = f'football_data_{index}.csv'
+    save_name = f'{save_path}/football_data_{index}.csv'
     df.to_csv(save_name, index=False)
     print(f'finished saving data for country {index}')
 
