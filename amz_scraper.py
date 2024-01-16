@@ -11,6 +11,8 @@ class crawledArticle():
 
 class Bot:
     def get_browser(self):
+        # List of User-Agent strings representing various browsers and devices.
+        # These are used to mimic different types of browsers during web scraping.
         user_agents = [
             "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36",
             "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.0.3 Safari/605.1.15",
@@ -24,9 +26,23 @@ class Bot:
             "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:88.0) Gecko/20100101 Firefox/88.0"
         ]
 
+        # Proxy list
+        proxies = [
+            '123.456.789.10:8080',
+            '111.222.333.44:8080',
+        ]
+
+        # Select a random User-Agent and Proxy
+        user_agent = random.choice(user_agents)
+        proxy = random.choice(proxies)
+
         options = ChromeOptions()
-        # Set a random user-agent from the list
-        options.add_argument(f'user-agent={random.choice(user_agents)}')
+        # Set User-Agent
+        options.add_argument(f'user-agent={user_agent}')
+
+        # Set Proxy
+        options.add_argument(f'--proxy-server={proxy}')
+
         options.headless = False
         options.add_experimental_option("detach", True)
 
@@ -47,7 +63,8 @@ class Bot:
         options.headless = False
         options.add_experimental_option("detach", True)
 
-        browser = Chrome(options=options) #don't close web browser when we quit Bot
+        #using get_browser to use user-agents list randomly and also proxy randomly
+        browser = self.get_browser()
         browser.maximize_window() #to keep html unchange so we can get same stuff
         browser.get(url)
         browser.set_page_load_timeout(10) #wait 10 seconds
