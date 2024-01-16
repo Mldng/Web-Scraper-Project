@@ -8,6 +8,8 @@ class crawledArticle():
     def __init__(self, title, price):
         self.title = title
         self.price = price
+        self.action_count = 0
+        self.start_time = time.time()
 
 class Bot:
     def get_browser(self):
@@ -50,6 +52,15 @@ class Bot:
         browser.maximize_window()
         return browser
 
+    def check_rate_limit(self):
+        # Allow max 100 actions per hour
+        if self.actions_count >= 100:
+            elapsed_time = time.time() - self.start_time
+            if elapsed_time < 3600:  # 3600 seconds in an hour
+                time.sleep(3600 - elapsed_time)
+            self.actions_count = 0
+            self.start_time = time.time()
+
     def article(self, name):
         count = 1 #number of article
         page = 1 #number of pages to be crawled
@@ -71,6 +82,8 @@ class Bot:
 
         while True:
             try:
+                # Check and apply rate limiting before each action
+                self.check_rate_limit()
                 if page_increment * page > max_retrieves:
                     break
                 if count > page_increment:
@@ -82,7 +95,7 @@ class Bot:
                 title = browser.find_element(By.XPATH,XPath_title)
                 title_text = title.get_attribute("innerHTML").splitlines()[0]
                 title.click()
-                time.sleep(10)
+                time.sleep(random.uniform(10,20))
 
                 XPath_price = '//*[@id="corePrice_feature_div"]'
                 price = browser.find_element(By.XPATH,XPath_price)
@@ -96,6 +109,9 @@ class Bot:
                 info_list.append(info)
 
                 count += 1
+
+                # Increment action count after each successful action
+                self.actions_count += 1
             except Exception as e:
                 print(f"Exception {e}")
                 count += 1
@@ -108,7 +124,7 @@ class Bot:
 
                 url = f"https://www.amazon.co.jp/s?k={name}&page={page}"
                 browser.get(url)
-                browser.set_page_load_timeout(10) #wait 10 seconds
+                browser.set_page_load_timeout(random.uniform(5,20)) #wait random from 5-20 seconds
 
         browser.quit()
 
